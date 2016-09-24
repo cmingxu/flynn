@@ -178,15 +178,35 @@ func (r TCPRoute) ToRoute() *Route {
 	}
 }
 
+type EventType string
+
+const (
+	EventTypeSet    EventType = "set"
+	EventTypeRemove EventType = "remove"
+	EventTypeDrain  EventType = "drain"
+)
+
 type Event struct {
-	Event string
-	ID    string
-	Route *Route
-	Error error
+	Event   EventType
+	ID      string
+	Route   *Route
+	Backend *Backend
+	Error   error
+}
+
+type Backend struct {
+	Service string `json:"service"`
+	Addr    string `json:"addr"`
+	JobID   string `json:"job_id"`
 }
 
 type StreamEvent struct {
-	Event string `json:"event"`
-	Route *Route `json:"route,omitempty"`
-	Error error  `json:"error,omitempty"`
+	Event   EventType `json:"event"`
+	Route   *Route    `json:"route,omitempty"`
+	Backend *Backend  `json:"backend,omitempty"`
+	Error   error     `json:"error,omitempty"`
+}
+
+type StreamEventsOptions struct {
+	EventTypes []EventType
 }
