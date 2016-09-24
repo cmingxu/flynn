@@ -117,6 +117,11 @@ func (c *Host) SignalJob(id string, sig int) error {
 	return c.c.Put(fmt.Sprintf("/host/jobs/%s/signal/%d", id, sig), nil, nil)
 }
 
+// DeregisterJob requests a job to deregister from service discovery.
+func (c *Host) DeregisterJob(id string) error {
+	return c.c.Put(fmt.Sprintf("/host/jobs/%s/deregister", id), nil, nil)
+}
+
 // StreamEvents about job state changes to ch. id may be "all" or a single
 // job ID.
 func (c *Host) StreamEvents(id string, ch chan *host.Event) (stream.Stream, error) {

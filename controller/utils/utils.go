@@ -170,6 +170,7 @@ type HostClient interface {
 	GetJob(id string) (*host.ActiveJob, error)
 	Attach(*host.AttachReq, bool) (cluster.AttachClient, error)
 	StopJob(string) error
+	DeregisterJob(string) error
 	ListJobs() (map[string]host.ActiveJob, error)
 	StreamEvents(id string, ch chan *host.Event) (stream.Stream, error)
 	GetStatus() (*host.HostStatus, error)
