@@ -87,6 +87,11 @@ type Job struct {
 	// referenced from within the main scheduler loop
 	State JobState `json:"state"`
 
+	// Service is the job's service from the release process type and, if
+	// set, causes the scheduler to wait for the router to stop routing
+	// requests to the job before requesting the host to stop the job
+	Service string `json:"service"`
+
 	// metadata is the cluster job's metadata, assigned whenever a host
 	// event is received for the job, and is used when persisting the job
 	// to the controller
