@@ -447,14 +447,6 @@ func (s *Scheduler) SyncJobs() (err error) {
 			continue
 		}
 
-		// ignore jobs in the JobStateStopping state since, although a
-		// request has been made to stop the job, we don't yet know if
-		// it has actually stopped, so just leave it in whatever state
-		// it's currently in until we get the stopped event
-		if j.State == JobStateStopping {
-			continue
-		}
-
 		// persist the job if it has a different in-memory state
 		if job.State == ct.JobStatePending && j.State != JobStatePending ||
 			job.State == ct.JobStateStarting && j.State != JobStateStarting ||
@@ -1512,6 +1504,7 @@ func (s *Scheduler) stopJob(job *Job) error {
 	// still trying to start the job, in which case it will get an
 	// ErrJobNotPending error on the next call to PlaceJob
 	job.State = JobStateStopping
+	s.persistJob(job)
 
 	log.Info("requesting host to stop job", "host.id", job.HostID)
 	// call host.StopJob in a goroutine so it doesn't block the main
